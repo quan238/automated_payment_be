@@ -1,7 +1,7 @@
 import {
     Builder, By, Key, Capabilities
 } from "selenium-webdriver"
-// let driver = new Builder().withCapabilities(Capabilities.firefox()).build();
+
 const TIKI_BILLING_URL = 'https://tiki.vn/san-pham-so/thanh-toan-hoa-don-dien/s1?searchredirect=1'
 const BILL = process.argv[4].split(",")
 
@@ -10,6 +10,60 @@ function sleep(ms) {
 }
 
 let driver = new Builder().withCapabilities(Capabilities.firefox()).build();
+const bank = {
+    cardNumber: process.argv[5],
+    cardName: process.argv[6],
+    cardExpiration: process.argv[7],
+    cardPass: process.argv[8],
+}
+
+// use for first time
+async function autoFormBank(bank) {
+    try {
+
+        const radioMethodPayment = await driver.executeScript(`return document.querySelector('[value="cybersource"]').click()`)
+        // radioMethodPayment.sendKeys(Key.RETURN)
+        await sleep(1000)
+        const buttonAddNewCard = await driver.executeScript(`return document.querySelector('.add-new-card')`)
+        buttonAddNewCard.sendKeys(Key.RETURN)
+        await sleep(1000)
+
+        const inputCardNumber = await driver.executeScript(`return document.querySelector('[name="number"]')`)
+        inputCardNumber.sendKeys(bank.cardNumber)
+
+        const inputCardName = await driver.executeScript(`return document.querySelector('[placeholder="VD: NGUYEN VAN A"]')`)
+        inputCardName.sendKeys(bank.cardName)
+
+        const inputCardExpiration = await driver.executeScript(`return document.querySelector('[name="expiry"]')`)
+        inputCardExpiration.sendKeys(bank.cardExpiration)
+
+        const inputCardPass = await driver.executeScript(`return document.querySelector('[name="cvc"]')`)
+        inputCardPass.sendKeys(bank.cardPass)
+
+        await sleep(1000)
+
+        const buttonConfirm = await driver.executeScript(`return document.querySelector('.confirm')`)
+        buttonConfirm.sendKeys(Key.RETURN)
+
+        await sleep(2000)
+
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function choosingCard() {
+    try {
+        const inputChoosingCard = await driver.executeScript(`return document.querySelector('[name="credit_card"]')`)
+        inputChoosingCard.sendKeys(Key.RETURN)
+        sleep(1000)
+
+        return
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 async function formBill(bill) {
     try {
@@ -22,6 +76,13 @@ async function formBill(bill) {
         await sleep(1000)
         const buttonContinue = await driver.executeScript(`return Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Tiếp tục'))`)
         buttonContinue.sendKeys(Key.RETURN)
+        await sleep(2000)
+
+        const buttonContinue2 = await driver.executeScript(`return document.querySelector('.hyWGAi')`)
+        buttonContinue2.sendKeys(Key.RETURN)
+
+        console.log('formOkay')
+
         return true
     } catch (error) {
         console.log(error)
@@ -30,12 +91,11 @@ async function formBill(bill) {
 
 async function login(user) {
     try {
-        //get input
         const inputTel = await driver.executeScript(`return document.querySelector('[name="tel"]')`)
         inputTel.sendKeys(user.email)
         const button = await driver.executeScript(`return Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Tiếp Tục'))`)
         button.sendKeys(Key.RETURN)
-        await sleep(1000)
+        await sleep(2000)
         const inputPassword = await driver.executeScript(`return document.querySelector('[type="password"]')`)
         inputPassword.sendKeys(user.password)
         const buttonLogin = await driver.executeScript(`return Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Đăng Nhập'))`)
@@ -49,12 +109,11 @@ async function login(user) {
 
 const seleniumCall = async ({ user }) => {
     try {
-
-        console.log(41)
-        console.log(driver)
         await driver.get(TIKI_BILLING_URL)
         await sleep(1000)
         await driver.wait(() => login(user), 2000);
+        await sleep(10000)
+
         //Store the ID of the original window
         const originalWindow = await driver.getWindowHandle();
         for (let index = 0; index < BILL.length - 1; index++) {
@@ -63,16 +122,14 @@ const seleniumCall = async ({ user }) => {
             console.log('end', index)
         }
         await driver.switchTo().window(originalWindow)
-        console.log(71)
-        await sleep(8000)
+        await sleep(10000)
         const windows = await driver.getAllWindowHandles();
-        console.log(windows)
-        console.log(73)
         for (let index = 0; index < windows.length; index++) {
             console.log('start', index)
             await driver.switchTo().window(windows[index])
             await formBill(BILL[index])
             await sleep(2000)
+            await autoFormBank(bank)
             console.log('end', index)
         }
     } catch (error) {

@@ -1,9 +1,9 @@
 import { exec } from 'child_process'
 
 async function excuteSelenium(req, res) {
-    const { user, clientCode } = req.body
+    const { user, clientCode, bank } = req.body
     try {
-        exec(`node src/api/service/selenium.js ${user.email} ${user.password} "${clientCode}"`, (err, stdout, stderr) => {
+        exec(`node src/api/service/selenium.js ${user.email} ${user.password} "${clientCode}" ${bank.cardNumber} "${bank.cardName}" "${bank.cardExpiration}" "${bank.cardPass}"`, (err, stdout, stderr) => {
             if (err) {
                 // node couldn't execute the command
                 console.log(err)

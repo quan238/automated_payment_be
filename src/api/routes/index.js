@@ -11,5 +11,6 @@ const upload = multer({ dest: 'uploads/', storage: multer.memoryStorage({}) })
 
 router.post('/execute', execute.excuteSelenium)
 router.post('/uploadFile', upload.single('files'), uploadController.uploadExcel)
+// router.post('/downloadFile', upload.single('files'), uploadController.downloadDivideExcel)
 
 export default router;
