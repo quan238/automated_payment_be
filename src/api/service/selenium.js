@@ -10,6 +10,10 @@ options.addArguments("--headless");
 options.addArguments("--disable-gpu");
 options.addArguments("--no-sandbox");
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 let driver = new Builder().forBrowser('chrome').setChromeOptions(options).build();
 const bank = {
     cardNumber: process.argv[5],
