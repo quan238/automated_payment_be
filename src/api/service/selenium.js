@@ -4,7 +4,6 @@ import {
 import chrome from 'selenium-webdriver/chrome.js'
 const TIKI_BILLING_URL = 'https://tiki.vn/san-pham-so/thanh-toan-hoa-don-dien/s1?searchredirect=1'
 const BILL = process.argv[4].split(",")
-let options = new chrome.Options();
 
 let options = new chrome.Options();
 options.setChromeBinaryPath(process.env.CHROME_BINARY_PATH);
