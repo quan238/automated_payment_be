@@ -1,15 +1,16 @@
 import {
     Builder, By, Key, Capabilities
 } from "selenium-webdriver"
-
+import chrome from 'selenium-webdriver/chrome.js'
 const TIKI_BILLING_URL = 'https://tiki.vn/san-pham-so/thanh-toan-hoa-don-dien/s1?searchredirect=1'
 const BILL = process.argv[4].split(",")
+let options = new chrome.Options();
+//Below arguments are critical for Heroku deployment
+options.addArguments("--headless");
+options.addArguments("--disable-gpu");
+options.addArguments("--no-sandbox");
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-let driver = new Builder().withCapabilities(Capabilities.firefox()).build();
+let driver = new Builder().forBrowser('chrome').setChromeOptions(options).build();
 const bank = {
     cardNumber: process.argv[5],
     cardName: process.argv[6],

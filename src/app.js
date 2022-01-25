@@ -26,7 +26,7 @@ app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200, credentials: true, })
 // Routes v1 version
 app.use("/v1", router);
 
-app.listen(process.env.PORT || 3000, () =>
+app.listen(process.env.PORT || 5000, () =>
     console.log(`
 🚀 Docs swagger ready at: http://localhost:${port}`)
 );

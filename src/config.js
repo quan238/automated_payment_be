@@ -1,6 +1,6 @@
 // Mapper for environment variables
 export const environment = process.env.NODE_ENV;
-export const port = process.env.PORT || 3000;
+export const port = process.env.PORT || 5000;
 
 export const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "mysecret";
 export const refreshTokenSecret =
