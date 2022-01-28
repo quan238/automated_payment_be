@@ -6,14 +6,20 @@ import chrome from 'selenium-webdriver/chrome.js'
 const TIKI_BILLING_URL = 'https://tiki.vn/san-pham-so/thanh-toan-hoa-don-dien/s1?searchredirect=1'
 const BILL = process.argv[4].split(",")
 
+const screen = {
+    width: 1920,
+    height: 1080
+};
+
 let options = new chrome.Options();
 options.setChromeBinaryPath(process.env.CHROME_BINARY_PATH);
 let serviceBuilder = new chrome.ServiceBuilder(process.env.CHROME_DRIVER_PATH);
 
-//Don't forget to add these for heroku
+//Below arguments are critical for Heroku deployment
 options.addArguments("--headless");
 options.addArguments("--disable-gpu");
 options.addArguments("--no-sandbox");
+options.windowSize(screen);
 
 let driver = new Builder()
     .forBrowser('chrome')
