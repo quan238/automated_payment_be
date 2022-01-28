@@ -18,7 +18,8 @@ let serviceBuilder = new chrome.ServiceBuilder(process.env.CHROME_DRIVER_PATH);
 //Below arguments are critical for Heroku deployment
 options.addArguments("--headless");
 options.addArguments("--disable-gpu");
-options.addArguments("--no-sandbox");
+options.addArguments("--no-sandbox")
+options.addArguments("--remote-debugging-port=9222");
 options.windowSize(screen);
 
 let driver = new Builder()
