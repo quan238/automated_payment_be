@@ -31,7 +31,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let driver = new Builder().forBrowser('chrome').setChromeOptions(options).setChromeService(serviceBuilder).build();
+// let driver = new Builder().forBrowser('chrome').setChromeOptions(options).setChromeService(serviceBuilder).build();
 const bank = {
     cardNumber: process.argv[5],
     cardName: process.argv[6],
